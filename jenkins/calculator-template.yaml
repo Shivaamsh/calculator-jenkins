@@ -1,14 +1,27 @@
 - job-template:
-    name: '{name}-{pyver}'
+    name: '{repo}-{branch}'
+    description: "project {repo} {branch} branch build\n"
+    scm:
+      - git:
+          remotes:
+            - origin:
+                url: 'https://github.com/dev-tool-index/{repo}.git'
+          branches:
+            - origin/{branch}
     builders:
-      - shell: 'git co {branch_name}'
+      - gradle:
+          wrapper: true
+          tasks: |
+            clean
+            check
 
 - project:
-   name: project-name
-   pyver:
-    - 26:
-       branch_name: old_branch
-    - 27:
-       branch_name: new_branch
-   jobs:
-    - '{name}-{pyver}'
+    name: calculator
+    repo:
+      - calculator-db
+      - calculator-service
+      - calculator-monitor
+    branch: master
+    jobs:
+      - '{repo}-{branch}'
+
